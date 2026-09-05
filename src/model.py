@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from math import sqrt
+from pathlib import Path
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, mean_absolute_error, mean_squared_error, roc_auc_score, r2_score
@@ -10,9 +11,14 @@ warnings.filterwarnings("ignore")
 
 print("🟢 Script com arquitetura hierárquica iniciado...")
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_FILE = BASE_DIR / "data" / "clickbus_tratado_final.csv"
+OUTPUT_DIR = BASE_DIR / "outputs"
+OUTPUT_DIR.mkdir(exist_ok=True)
+
 # -------------------- CARREGAR E PREPARAR DADOS (Sem alterações) --------------------
 try:
-    df = pd.read_csv('../dados/clickbus_tratado_final.csv')
+    df = pd.read_csv(DATA_FILE)
     print("✅ Arquivo carregado com sucesso!")
 except Exception as e:
     print(f"❌ Erro ao carregar o CSV: {e}")
@@ -153,5 +159,6 @@ predicoes = pd.DataFrame({
     'proximo_trecho': y_trecho_pred
 })
 
-predicoes.to_csv('../outputs/predicoes_clickbus_hierarquico.csv', index=False)
-print("✅ Arquivo salvo em ../outputs/predicoes_clickbus_hierarquico.csv")
+output_file = OUTPUT_DIR / 'predicoes_clickbus_hierarquico.csv'
+predicoes.to_csv(output_file, index=False)
+print(f"✅ Arquivo salvo em {output_file}")

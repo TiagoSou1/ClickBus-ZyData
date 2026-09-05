@@ -1,9 +1,11 @@
 import pandas as pd
 import re
+from pathlib import Path
 
 # Arquivo de entrada e saída
-input_file = "clickbus_tratado 1.csv"
-output_file = "clickbus_tratado_final.csv"
+BASE_DIR = Path(__file__).resolve().parent.parent
+input_file = BASE_DIR / "data" / "clickbus_tratado 1.csv"
+output_file = BASE_DIR / "data" / "clickbus_tratado_final.csv"
 
 # Lista de cidades brasileiras para o mapeamento
 city_list = [

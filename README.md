@@ -1,111 +1,122 @@
-# 🚌 Projeto ClickBus - Inteligência de Marketing e Vendas  
+# ClickBus — Customer Intelligence & Marketing Analytics
 
-Um pipeline completo de **Machine Learning + Segmentação RFM + Lógica de Campanhas** para prever comportamento de compra de clientes, sugerir próximos trechos e apoiar decisões de marketing com dashboards no **Power BI**.  
+Projeto acadêmico em grupo desenvolvido na FIAP para transformar dados de compras em segmentação de clientes, previsões de recompra, recomendação de trechos e regras de campanhas acionáveis.
 
----
+O case conecta preparação de dados, análise RFM, machine learning e comunicação dos resultados em Power BI.
 
-## 📌 Estrutura do Projeto  
+## Problema de negócio
+
+Uma operação de viagens precisa entender quem são seus clientes, quando existe maior probabilidade de uma nova compra e qual comunicação pode ser mais relevante para cada perfil. O projeto organiza esse problema em três perguntas:
+
+1. Quais clientes apresentam maior recência, frequência e valor?
+2. O histórico disponível permite estimar recompra e próximo trecho?
+3. Como transformar segmentos e predições em regras de campanha compreensíveis?
+
+## Solução construída
+
+- Normalização de cidades e pseudonimização dos identificadores de clientes.
+- Segmentação RFM em cinco perfis operacionais.
+- Classificador para recompra em até sete dias.
+- Regressores especializados para estimar dias até a próxima compra.
+- Classificador do próximo trecho entre as rotas mais frequentes.
+- Regras de negócio que combinam segmento e predição em uma campanha sugerida.
+- Dashboard de Power BI para exploração dos resultados.
+
+## Fluxo analítico
+
+```text
+Dados tratados
+      │
+      ├── Segmentação RFM ───────────────┐
+      │                                  │
+      └── Modelos preditivos ────────────┼── Regras de campanha ── Power BI
+                                         │
+                                         └── Saídas CSV acionáveis
 ```
-📁 PROJETO_CLICKBUS/
-├── 📁 dados/
-│   ├── 📄 conversor.py → Anonimiza clientes e normaliza cidades dos dados brutos.
-│   ├── 📊 clickbus_tratado 1.csv → Dataset original.
-│   └── 📊 clickbus_tratado_final.csv → Dataset limpo, pronto para os scripts.
-│
-├── 📁 outputs/
-│   ├── 📊 clientes_segmentados.csv → Saída da segmentação RFM por cliente.
-│   ├── 📊 predicoes_clickbus_hierarquico.csv → Saída bruta com as predições do modelo de ML.
-│   └── 📊 predicoes_com_campanhas.csv → Arquivo final acionável com as campanhas.
-│
-└── 📁 scripts/
-    ├── 📄 modelo.py → Pipeline hierárquico de Machine Learning:
-    │   ├── Classificador Gatekeeper (compra em 7 dias?)
-    │   ├── Regressores de curto (0-7d) e longo prazo (>7d)
-    │   └── Classificador de próximo trecho
-    ├── 📄 perfil_viagem.py → Segmentação de clientes via RFM e análise de perfil.
-    └── 📄 promocoes.py → Aplica a lógica de negócio para gerar as campanhas de marketing.
+
+## Tecnologias
+
+- Python, Pandas e NumPy
+- scikit-learn
+- Random Forest para classificação e regressão
+- Análise RFM
+- Power BI
+- Arquivos CSV para entradas e saídas do pipeline
+
+## Estrutura
+
+```text
+ClickBus-ZyData/
+├── data/
+│   ├── README.md
+│   └── arquivos CSV locais não versionados
+├── outputs/
+│   └── resultados gerados localmente
+├── src/
+│   ├── anonymize_data.py
+│   ├── segmentation.py
+│   ├── model.py
+│   └── campaigns.py
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
-    
----
 
-## 🚀 Etapas realizadas  
+## Como executar
 
-### 1. **Tratamento dos Dados**  
-- Normalização de cidades e IDs de clientes (`conversor.py`).  
-- Padronização de campos de origem/destino de viagem.  
+Pré-requisito: Python 3.10+.
 
-### 2. **Modelagem Hierárquica de ML (`modelo.py`)**  
-- **Gatekeeper** → classifica se o cliente vai comprar em até 7 dias.  
-- **Regressor Curto Prazo** → previsão de dias até próxima compra (0 a 7 dias).  
-- **Regressor Longo Prazo** → previsão para clientes de longo prazo (> 7 dias).  
-- **Classificador de Próximo Trecho** → prevê o próximo destino da viagem.  
+```bash
+python -m venv .venv
+python -m pip install -r requirements.txt
+```
 
-### 3. **Segmentação Inteligente (`perfil_viagem.py`)**  
-- Recência, Frequência e Valor Monetário (**RFM Score**).  
-- Segmentos criados: **VIP, Frequente Econômico, Gastador Ocasional, Inativo, Regular**.  
-- Identificação do tipo de viagem preferido (Somente Ida / Ida e Volta).  
+Os dados completos do desafio não são redistribuídos neste repositório. Consulte `data/README.md`, confirme a autorização de uso da fonte e coloque a entrada local no diretório `data/` antes da execução.
 
-### 4. **Regras de Campanhas (`promocoes.py`)**  
-- Junção de predições com a segmentação RFM.  
-- Lógica de campanhas:  
-  - **Preditiva VIP / Preditiva Padrão**  
-  - **Reativação (Churn)**  
-  - **Fidelização VIP**  
-  - **Manutenção (sem ação imediata)**  
-- Geração de **texto de oferta personalizado** por cliente.  
+Com o ambiente virtual ativado, execute a partir da raiz do repositório:
 
-### 5. **Visualização no Power BI**  
-- Dashboards com insights de clientes, próximas compras e campanhas sugeridas.  
-- Gráficos de recência, frequência, valor, além de performance dos modelos.  
+```bash
+python src/anonymize_data.py
+python src/segmentation.py
+python src/model.py
+python src/campaigns.py
+```
 
----
+Os três últimos scripts geram os arquivos analíticos em `outputs/`.
 
-## 🧠 Tecnologias usadas  
+## Entregáveis
 
-- **Python** → Pandas, NumPy, scikit-learn  
-- **Modelos ML** → RandomForestClassifier, RandomForestRegressor  
-- **RFM Analysis** → Segmentação estatística  
-- **Power BI** → Visualização dos resultados finais  
-- **Excel/CSV** → Entrada e saída dos dados processados  
+- Base de clientes segmentada por RFM.
+- Predições de recompra, horizonte e próximo trecho.
+- Tabela final com campanhas sugeridas.
+- Dashboard para análise de perfis e resultados.
 
----
+[Acessar o dashboard público no Power BI](https://app.powerbi.com/view?r=eyJrIjoiZDYwZTcwMDUtYTFiNy00OGRmLWI2MmMtNWZmOWZkZDJlOWE5IiwidCI6IjExZGJiZmUyLTg5YjgtNDU0OS1iZTEwLWNlYzM2NGU1OTU1MSIsImMiOjR9)
 
-## 📈 Resultados  
+![Dashboard do projeto no Power BI](https://github.com/user-attachments/assets/30093a0d-4e8d-413e-aa4c-3af749842866)
 
-- Previsão de clientes que comprarão em até 7 dias.  
-- Estimativa de dias até a próxima compra.  
-- Previsão do próximo trecho da viagem.  
-- Segmentação completa dos clientes via RFM.  
-- Sugestão de campanhas personalizadas e textos automáticos.  
-- Exportação acionável para integração com BI e Marketing.  
+## Limitações
 
----
+- A validação atual usa uma separação aleatória estratificada por registro. Uma evolução importante é adotar validação temporal e impedir que registros do mesmo cliente apareçam nos dois conjuntos.
+- As regras de campanha são heurísticas demonstrativas; não representam um experimento causal ou uma política pronta para produção.
+- O segmento “em risco” é uma proxy baseada em RFM, não um modelo validado de churn.
+- O projeto não documenta custos de erro, calibração de probabilidades ou monitoramento de drift.
+- A disponibilidade e o uso dos dados continuam sujeitos às regras do desafio acadêmico e da fonte original.
 
-## 🧰 Trabalho futuro  
+## Próximas melhorias
 
-- Melhorar hiperparâmetros dos modelos para ganho de precisão.  
-- Implementar atualização automática diária dos dados.  
-- Integrar API para recomendação em tempo real.  
-- Expansão para novos segmentos e campanhas dinâmicas.  
+- Implementar validação temporal e separação por cliente.
+- Comparar o Random Forest com baselines mais simples.
+- Adicionar métricas por classe e para o classificador de trechos.
+- Transformar preparação e modelo em um pipeline testável do scikit-learn.
+- Criar testes automatizados para schema, caminhos e regras de campanha.
 
----
+## Autores
 
-## 📷 Power BI  
-<img width="900" height="560" alt="image" src="https://github.com/user-attachments/assets/30093a0d-4e8d-413e-aa4c-3af749842866" />
+- Bruno de Souza Oliveira
+- Daniel Gallo de Almeida Junior
+- Ricardo Henrique Ramos Silva
+- Rodrigo Silva Oshiro
+- Tiago Sousa Leite
 
-
----
-- Link do Dashboard
-  [https://app.powerbi.com/links/QuS1JEqMg6?ctid=11dbbfe2-89b8-4549-be10-cec364e59551&pbi_source=linkShare](https://app.powerbi.com/view?r=eyJrIjoiZDYwZTcwMDUtYTFiNy00OGRmLWI2MmMtNWZmOWZkZDJlOWE5IiwidCI6IjExZGJiZmUyLTg5YjgtNDU0OS1iZTEwLWNlYzM2NGU1OTU1MSIsImMiOjR9)
----
-
-## 👨‍💻 Autores
-
-**Ricardo Henrique Ramos Silva**  
-**Bruno de Souza Oliveira**  
-**Tiago Sousa Leite**  
-**Daniel Gallo de Almeida Junior**  
-**Rodrigo Silva Oshiro**
- 
-
-
+Projeto acadêmico desenvolvido na FIAP.

@@ -1,10 +1,16 @@
 import pandas as pd
 from datetime import datetime
+from pathlib import Path
 
 print("🚀 Início do script de segmentação")
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_FILE = BASE_DIR / "data" / "clickbus_tratado_final.csv"
+OUTPUT_DIR = BASE_DIR / "outputs"
+OUTPUT_DIR.mkdir(exist_ok=True)
+
 # 1. Leitura dos dados
-df = pd.read_csv('../dados/clickbus_tratado_final.csv')
+df = pd.read_csv(DATA_FILE)
 df['date_purchase'] = pd.to_datetime(df['date_purchase'], errors='coerce')
 
 # 2. Data de referência para recência (data da última compra geral)
@@ -74,7 +80,8 @@ tipo_viagem_preferido.columns = ['fk_contact', 'tipo_viagem_preferido']
 # 9. Merge com a tabela clientes
 clientes = clientes.merge(tipo_viagem_preferido, on='fk_contact', how='left')
 
-# 10. Exportar resultado final
-clientes.to_csv('../outputs/clientes_segmentados.csv', index=False)
+# 10. Padronizar a chave e exportar o resultado final
+clientes = clientes.rename(columns={'fk_contact': 'cliente_id'})
+clientes.to_csv(OUTPUT_DIR / 'clientes_segmentados.csv', index=False)
 
 print("✅ Segmentação concluída com sucesso!")

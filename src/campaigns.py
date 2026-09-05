@@ -6,21 +6,24 @@
 
 import pandas as pd
 import warnings
+from pathlib import Path
 warnings.filterwarnings("ignore")
 
 print("🟢 Iniciando script de aplicação da lógica de promoções...")
 
 # --- ARQUIVOS DE ENTRADA E SAÍDA ---
-# !!! ATENÇÃO: Verifique se os caminhos e nomes dos arquivos abaixo estão corretos !!!
+BASE_DIR = Path(__file__).resolve().parent.parent
+OUTPUT_DIR = BASE_DIR / "outputs"
+OUTPUT_DIR.mkdir(exist_ok=True)
 
 # Este é o arquivo gerado pelo seu script de ML
-path_predicoes_raw = '../outputs/predicoes_clickbus_hierarquico.csv' 
+path_predicoes_raw = OUTPUT_DIR / 'predicoes_clickbus_hierarquico.csv'
 
 # Este é o arquivo que contém a segmentação RFM dos seus clientes
-path_segmentos = '../outputs/clientes_segmentados.csv' 
+path_segmentos = OUTPUT_DIR / 'clientes_segmentados.csv'
 
 # Este é o nome do arquivo final que será gerado
-path_output_final = '../outputs/predicoes_com_campanhas.csv'
+path_output_final = OUTPUT_DIR / 'predicoes_com_campanhas.csv'
 
 
 # 1. CARREGAR OS DADOS NECESSÁRIOS
